@@ -3,6 +3,8 @@ import requests
 import xml.etree.ElementTree as ET
 
 #build xml
+base_url = 'https://www.checkbooknyc.com/api'
+
 request_tag = ET.Element('request')
 
 type_of_data = ET.SubElement(request_tag,'type_of_data')
