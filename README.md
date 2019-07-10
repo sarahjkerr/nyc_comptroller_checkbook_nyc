@@ -18,4 +18,4 @@ Suppose you have a list of several organizations whose business business dealing
 4. Receive the results and parse them accordingly
 5. Zip everything back together in a tidy dataframe
 
-There's also a [Python package written by the Comptroller's Office](https://github.com/CityOfNewYork/Comptrollers-Checkbook). However, I wasn't quite able to get this working with 3.7 despite updating the docstrings as needed. It was published in 2013, and there are a handful of pull requests from 2015 still pending, so I don't think it'll be updated anytime soon.
+There's also a [Python package written by the Comptroller's Office](https://github.com/CityOfNewYork/Comptrollers-Checkbook). However, I wasn't quite able to get this working with 3.6 despite updating the docstrings as needed. It was published in 2013, and there are a handful of pull requests from 2015 still pending, so I don't think it'll be updated anytime soon.
