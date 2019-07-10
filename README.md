@@ -19,8 +19,3 @@ Suppose you have a list of several organizations whose business business dealing
 5. Zip everything back together in a tidy dataframe
 
 There's also a [Python package written by the Comptroller's Office](https://github.com/CityOfNewYork/Comptrollers-Checkbook). However, I wasn't quite able to get this working with 3.7 despite updating the docstrings as needed. It was published in 2013, and there are a handful of pull requests from 2015 still pending, so I don't think it'll be updated anytime soon.
-
-## Keep in Mind
-The documentation for the API is robust, but perhaps a little bit out of date. You may find that what's listed as an available combination of query parameters in the documentation isn't actually accepted by the API. For example, when querying contracts, you should be able to search by the 'all', 'expense', or 'revenue' categories. However, when attempting to actually do this, the API returns a failure stating that only the 'expense' category is allowable. There are a few other instances like this around the 'status' and response column values.
-
-**But never fear**, the API's results and error messages are very specific, and will tell you exactly what values are actually allowable, and which you need to change. For the response column values, you usually just need to remove the 'prime_contracts_' prefix before the value name.
