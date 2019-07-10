@@ -10,9 +10,9 @@ orgs_list = list(orgs['company_name'])
 #create xml builder function
 base_url = 'https://www.checkbooknyc.com/api'
 
-xml_request_list = []
-
 def build_xml(x):
+    xml_request_list = []
+    
     for item in x:
         request_tag = ET.Element('request')
     
