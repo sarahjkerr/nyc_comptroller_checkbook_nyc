@@ -17,7 +17,7 @@ def build_xml(x):
         request_tag = ET.Element('request')
     
         type_of_data = ET.SubElement(request_tag,'type_of_data')
-        type_of_data.text = 'Contracts_OGE'
+        type_of_data.text = 'Contracts'
 
         records_from = ET.SubElement(request_tag, 'records_from')
         records_from.text = '1'
@@ -72,34 +72,34 @@ def build_xml(x):
         value_4.text = '2019'
 
         response_columns = ET.SubElement(request_tag, 'response_columns')
-
+        
         response_col_1 = ET.SubElement(response_columns, 'column')
-        response_col_1.text = 'contract_id'
+        response_col_1.text = 'prime_contract_id'
         
         response_col_2 = ET.SubElement(response_columns, 'column')
         response_col_2.text = 'prime_vendor'
         
         response_col_3 = ET.SubElement(response_columns, 'column')
-        response_col_3.text = 'purpose'
+        response_col_3.text = 'prime_contract_purpose'
         
         response_col_4 = ET.SubElement(response_columns, 'column')
-        response_col_4.text = 'original_amount'
+        response_col_4.text = 'prime_contract_original_amount'
         
         response_col_5 = ET.SubElement(response_columns, 'column')
-        response_col_5.text = 'start_date'
+        response_col_5.text = 'prime_contract_start_date'
         
         response_col_6 = ET.SubElement(response_columns, 'column')
-        response_col_6.text = 'end_date'
+        response_col_6.text = 'prime_contract_end_date'
         
         response_col_7 = ET.SubElement(response_columns, 'column')
-        response_col_7.text = 'other_government_entities'
+        response_col_7.text = 'prime_contracting_agency'
         
         response_col_8 = ET.SubElement(response_columns, 'column')
-        response_col_8.text = 'contract_type'
+        response_col_8.text = 'prime_contract_type'
         
         response_col_9 = ET.SubElement(response_columns, 'column')
-        response_col_9.text = 'contract_industry'
-    
+        response_col_9.text = 'prime_contract_industry'
+        
         full_xml_request = ET.tostring(request_tag)
         
         xml_request_list.append(full_xml_request)
