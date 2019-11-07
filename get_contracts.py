@@ -58,16 +58,17 @@ def generate_xml(criteria_list, response_col_list, records_from, max_records_per
 
 def get_contracts(total_records, max_records_per_call, criteria_list, response_col_list):
 
-  total_records = total_records
-  max_records_per_call = max_records_per_call
-  records_pulled = 1
-  response_list = []
+    total_records = total_records
+    max_records_per_call = max_records_per_call
+    records_pulled = 1
+    response_list = []
 
-  while records_pulled < total_records:
-    response = requests.post(base_url, data = generate_xml(search_dict, response_col_list, records_pulled, max_records_per_call_arg))
-    response_list.append(response.text)
-    ended_on = records_pulled + max_records_per_call_arg
-    output = ("Fetching " + str(max_records_per_call_arg) + " results from " + str(records_pulled) + " to " + str(ended_on))
-    records_pulled += max_records_per_call_arg
+    while records_pulled < total_records:
+        response = requests.post(base_url, data = generate_xml(search_dict, response_col_list, records_pulled, max_records_per_call))
+        response_list.append(response.text)
+        ended_on = records_pulled + max_records_per_call
+        output = ("Fetching " + str(max_records_per_call) + " results from " + str(records_pulled) + " to " + str(ended_on))
+        records_pulled += max_records_per_call
 
     print(output)
+    return response_list
