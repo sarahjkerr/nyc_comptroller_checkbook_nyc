@@ -1,53 +1,55 @@
-import xml.etree.cElementTree as ET
+from xml.etree import ElementTree
+from xml.dom import minidom
+from xml.etree.ElementTree import Element, SubElement, tostring, XML
 
-def search_criteria(search_fields_list):
-    
-    keep_count = 1
-    
-    criteria_master_str = "search_criteria = ET.SubElement(request_tag, 'search_criteria') "
-    
-    for key in search_fields_list:
-        
-        value = search_fields_list[key]
-        
-        criteria_no = "criteria_" + str(keep_count)
-        
-        criteria_string = criteria_no + " = ET.SubElement(search_criteria, 'criteria')"
-        
-        name_of = "name_" + str(keep_count) + " = ET.SubElement(" + criteria_no + ", 'name')"
-        name_text = "name_" + str(keep_count) + ".text = '" + key + "'"
-        
-        type_of = "type_" + str(keep_count) + " = ET.SubElement(" + criteria_no + ", 'name')"
-        type_text = "type_" + str(keep_count) + ".text = 'value'"
-        
-        value_of = "value_" + str(keep_count) + " = ET.SubElement(" + criteria_no + ", 'name')"
-        value_text = "value_" + str(keep_count) + ".text = '" + value + "'"
-        
-        keep_count += 1
-        
-        criteria_xml = criteria_string + ' ' + name_of +  ' ' + name_text +  ' ' + type_of +  ' ' + type_text + ' ' + value_of +  ' ' + value_text
-    
-        criteria_master_str += criteria_xml
-        
-    return criteria_master_str
+#Adds the prettify method written by Averroes -> https://gist.github.com/Averroes/6375a1cccd39fe9f2dd7
+def prettify(elem):
+    """Return a pretty-printed XML string for the Element.
+    """
+    rough_string = ElementTree.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")
 
-def response_columns(response_col_list):
-       
-    keep_count = 1
+def generate_xml(criteria_list, response_col_list, records_from, max_records_per_call):
     
-    col_master_str = "response_columns = ET.SubElement(request_tag, 'response_columns') "
+    top = Element("request")
     
+    type_of_data_tag = SubElement(top, "type_of_data")
+    type_of_data_tag.text = "contracts"
+    
+    records_from_tag = SubElement(top, "records_from")
+    records_from_tag.text = str(records_from)
+    
+    max_records_tag = SubElement(top, "max_records")
+    max_records_tag.text = str(max_records_per_call)
+    
+    search_criteria_parent = SubElement(top, "search_criteria")
+    search_criteria_list = []
+    
+    response_col_parent = SubElement(top, "response_columns")
+    response_cols = []
+    
+    for key in search_dict:
+        
+        value = search_dict[key]
+        
+        name = "<name>" + value[0] + "</name>"
+        type_of = "<type>" + value[1] + "</type>"
+        value = "<value>" + value[2] + "</value>"
+        
+        search_criteria_request = "<criteria>" + name + type_of + value + "</criteria>"
+        
+        all_search_criteria = XML(search_criteria_request)
+        
+        search_criteria_list.append(all_search_criteria)
+        
     for item in response_col_list:
         
-        response_col_no = "response_col_" + str(keep_count)
+        response_col_request = XML("<column>" + item + "</column>")
         
-        response_col_str = response_col_no + " = ET.SubElement(response_columns, 'column')"
-        response_col_text = response_col_no + ".text = " + item
+        response_cols.append(response_col_request)
         
-        response_col_xml = response_col_str + ' ' + response_col_text
-        
-        col_master_str += response_col_xml
-        
-        keep_count += 1
-        
-    return col_master_str
+    search_criteria_parent.extend(search_criteria_list)
+    response_col_parent.extend(response_cols)
+    
+    print(prettify(top))
