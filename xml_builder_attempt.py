@@ -15,7 +15,7 @@ def generate_xml(criteria_list, response_col_list, records_from, max_records_per
     top = Element("request")
     
     type_of_data_tag = SubElement(top, "type_of_data")
-    type_of_data_tag.text = "contracts"
+    type_of_data_tag.text = "Contracts"
     
     records_from_tag = SubElement(top, "records_from")
     records_from_tag.text = str(records_from)
@@ -52,4 +52,22 @@ def generate_xml(criteria_list, response_col_list, records_from, max_records_per
     search_criteria_parent.extend(search_criteria_list)
     response_col_parent.extend(response_cols)
     
-    print(prettify(top))
+    full_xml_request = tostring(top)
+
+    return full_xml_request
+
+def get_contracts(total_records, max_records_per_call, criteria_list, response_col_list):
+
+  total_records = total_records
+  max_records_per_call = max_records_per_call
+  records_pulled = 1
+  response_list = []
+
+  while records_pulled < total_records:
+    response = requests.post(base_url, data = generate_xml(search_dict, response_col_list, records_pulled, max_records_per_call_arg))
+    response_list.append(response.text)
+    ended_on = records_pulled + max_records_per_call_arg
+    output = ("Fetching " + str(max_records_per_call_arg) + " results from " + str(records_pulled) + " to " + str(ended_on))
+    records_pulled += max_records_per_call_arg
+
+    print(output)
