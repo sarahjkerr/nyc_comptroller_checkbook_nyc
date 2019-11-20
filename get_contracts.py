@@ -1,14 +1,11 @@
 from xml.etree import ElementTree
 from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, tostring, XML
+import requests
 
-#Adds the prettify method written by Averroes -> https://gist.github.com/Averroes/6375a1cccd39fe9f2dd7
-def prettify(elem):
-    """Return a pretty-printed XML string for the Element.
-    """
-    rough_string = ElementTree.tostring(elem, 'utf-8')
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
+search_dict = {'criteria1' : ['status', 'value', 'active'], 'criteria2': ['category', 'value', 'expense']}
+response_cols = ['prime_contract_id', 'prime_vendor', 'document_code']
+base_url = "https://www.checkbooknyc.com/api"
 
 def generate_xml(criteria_list, response_col_list, records_from, max_records_per_call):
     
@@ -58,17 +55,56 @@ def generate_xml(criteria_list, response_col_list, records_from, max_records_per
 
 def get_contracts(total_records, max_records_per_call, criteria_list, response_col_list):
 
-    total_records = total_records
-    max_records_per_call = max_records_per_call
-    records_pulled = 1
-    response_list = []
+  total_records = total_records
+  max_records_per_call = max_records_per_call
+  records_pulled = 1
+  response_list = []
 
-    while records_pulled < total_records:
-        response = requests.post(base_url, data = generate_xml(search_dict, response_col_list, records_pulled, max_records_per_call))
-        response_list.append(response.text)
-        ended_on = records_pulled + max_records_per_call
-        output = ("Fetching " + str(max_records_per_call) + " results from " + str(records_pulled) + " to " + str(ended_on))
-        records_pulled += max_records_per_call
+  while records_pulled < total_records:
+    response = requests.post(base_url, data = generate_xml(search_dict, response_col_list, records_pulled, max_records_per_call))
+    response_list.append(response.text)
+    ended_on = (records_pulled + max_records_per_call) -1
+    output = f"Fetching {max_records_per_call} results from {records_pulled} to {ended_on}"
+    records_pulled += max_records_per_call
 
     print(output)
-    return response_list
+
+  return response_list
+
+def unpack_response(response_list, response_col_list):
+  output_list = []
+
+  for response in response_list:
+    thing = get_elem_data(response_col_list, response)
+
+    output_of_thing = split_list(thing, response_col_list)
+
+    output_list.append(output_of_thing)
+
+  return output_list
+
+#Gets the response data for an instance of a response object
+def get_elem_data(response_col_list, PLACEHOLDER):
+  
+  child_elems = []
+
+  for item in response_cols:
+    argument = ".//" + item
+    for i in ElementTree.fromstring(PLACEHOLDER).findall(argument):
+      child_elems.append(i.text)
+  
+  return child_elems
+
+#Splits the response data into a dict
+def split_list(child_elems, response_col_list):
+
+  list_of_lists = []
+
+  response_col_list = response_col_list
+
+  break_pt = int(len(child_elems)/len(response_col_list))
+
+  for i in range(0, len(child_elems), break_pt):
+    list_of_lists.append(child_elems[i : i + break_pt])
+
+  return dict(zip(response_cols, list_of_lists))
